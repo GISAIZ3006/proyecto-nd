@@ -7,19 +7,22 @@ st.title("⚽ Dashboard de Estadísticas + IA")
 st.markdown("### Proyecto de Semestre: Data & Modeling")
 
 if "GEMINI_API_KEY" in st.secrets:
+    # Conexión con la clave
     genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
     
-    # Usamos 'gemini-pro' que es el modelo estándar más estable para la API
-    model = genai.GenerativeModel('gemini-pro')
+    # Nombre de modelo completo para evitar el Error 404
+    model = genai.GenerativeModel(model_name="models/gemini-1.5-flash-latest")
     
     pregunta = st.text_input("¿Qué quieres analizar hoy?")
 
     if pregunta:
-        with st.spinner('Analizando...'):
+        with st.spinner('Analizando con Gemini...'):
             try:
+                # Generamos el contenido
                 response = model.generate_content(pregunta)
                 st.info(response.text)
             except Exception as e:
-                st.error(f"Error técnico: {e}")
+                st.error(f"Error en la API: {e}")
+                st.write("Prueba a escribir algo más específico como: 'Resumen de Notre Dame'")
 else:
-    st.error("Configura la GEMINI_API_KEY en Advanced Settings de Streamlit.")
+    st.error("Por favor, configura la GEMINI_API_KEY en los Secrets de Streamlit.")
