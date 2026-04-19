@@ -1,25 +1,28 @@
 import json
 import datetime
+import os
 
-# Simulación de captura de datos (Scraping/API)
-# Aquí es donde el modelo "vibra" con la realidad
-new_updates = [
+# Simulando la captura de noticias del día
+# En el futuro, aquí conectarías APIs reales de ESPN o X
+today = datetime.date.today().strftime("%B %d, %Y")
+
+daily_intelligence = [
     {
-        "source": "ESPN",
-        "trend": f"Update for {datetime.date.today()}: New Transfer Portal regulations finalized."
+        "source": "ESPN National",
+        "trend": f"NCAA officials discussing new NIL eligibility rules for {today}."
     },
     {
-        "source": "X Intelligence",
-        "trend": "High activity detected for 2027 QB recruits in the Midwest."
+        "source": "X (Recruit Tracker)",
+        "trend": "Four-star Offensive Lineman schedules official visit to South Bend."
     },
     {
-        "source": "Irish Breakdown",
-        "trend": "Message board 'heat' rising regarding defensive line rotation."
+        "source": "Irish Breakdown Boards",
+        "trend": "Trending: Debate over quarterback rotation intensity in spring practice."
     }
 ]
 
-# Guardar los datos en el archivo que lee Streamlit
+# Guardamos el archivo que app.py va a leer
 with open('news_data.json', 'w', encoding='utf-8') as f:
-    json.dump(new_updates, f, indent=4)
+    json.dump(daily_intelligence, f, indent=4)
 
-print("Intelligence data updated successfully.")
+print(f"Success: news_data.json updated for {today}")
