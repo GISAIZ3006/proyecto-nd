@@ -88,7 +88,6 @@ if st.button("🚀 Generate Today's Intelligence"):
 # --- 5. SIDEBAR (Project Metadata for your Professors) ---
 with st.sidebar:
     st.header("Project Info")
-    st.write("**Student:** Gisela Sanchez Iznajar")
     st.write("**Course:** Semester Project: Data & Modeling")
     st.write("**Status:** Prototype (V1.2)")
     st.markdown("---")
