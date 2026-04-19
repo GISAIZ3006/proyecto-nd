@@ -2,97 +2,59 @@ import streamlit as st
 import pandas as pd
 import json
 import os
+from datetime import datetime
 
-# --- 1. CONFIGURACIÓN DE LA PÁGINA ---
-st.set_page_config(
-    page_title="Pulse of the Program | Irish Breakdown",
-    page_icon="☘️",
-    layout="centered"
-)
+# --- CONFIGURACIÓN ---
+st.set_page_config(page_title="Pulse of the Program", page_icon="☘️")
 
-# Estilo profesional (Azul Navy y Dorado para ND)
 st.markdown("""
     <style>
-    .stButton>button {
-        width: 100%;
-        border-radius: 5px;
-        height: 3em;
-        background-color: #002b5b;
-        color: white;
-    }
-    .stInfo {
-        background-color: #e8f4f8;
-    }
+    .report-box { border-left: 5px solid #002b5b; padding-left: 15px; margin-bottom: 20px; }
+    .stButton>button { background-color: #002b5b; color: white; width: 100%; }
     </style>
     """, unsafe_allow_html=True)
 
-# --- 2. MOTOR DE INTELIGENCIA (El "Modelo") ---
+# --- MODELO DE INTELIGENCIA ---
 def get_nd_angle(trend):
-    """
-    Transforma noticias generales en estrategia local para Notre Dame.
-    """
     t = trend.lower()
-    
     if "transfer portal" in t:
-        return "⚠️ **STRATEGY:** High impact on safety depth. Admissions must expedite graduate clearance."
+        return "⚠️ **STRATEGY:** Monitor safety depth. Graduate clearance is priority."
     elif "visit" in t or "commit" in t or "isaiah rogers" in t:
-        return "👀 **RECRUIT ALERT:** Follow-up to Isaiah Rogers momentum. Secondary is becoming a 'lock'."
+        return "👀 **RECRUIT ALERT:** Follow-up to Isaiah Rogers momentum. Secondary is solid."
     elif "offensive line" in t or "lt" in t:
-        return "🔥 **BOARD HEAT:** Fans fixated on LT battle. Address this in today's 'Morning Notes'."
+        return "🔥 **BOARD HEAT:** Fan focus on LT battle. Address in Morning Notes."
     elif "playoff" in t:
-        return "🏆 **POST-SEASON:** 12-team format favors ND's independence. No conference title game needed."
-    
+        return "🏆 **POST-SEASON:** 12-team format favors ND's independent path."
     return "Analyzing sources for a specific local strategy..."
 
-# --- 3. CARGA DE DATOS AUTOMATIZADA ---
+# --- CARGA DE DATOS ---
 def load_data():
-    """
-    Lee el archivo generado por GitHub Actions. 
-    Si el archivo no existe (primera vez), usa datos de respaldo.
-    """
     file_path = 'news_data.json'
     if os.path.exists(file_path):
         with open(file_path, 'r', encoding='utf-8') as f:
-            return json.load(f)
-    else:
-        # Datos de respaldo por si el scraper aún no ha corrido
-        return [
-            {"source": "System", "trend": "Esperando actualización de las 8:00 AM..."},
-            {"source": "Manual", "trend": "No se encontró el archivo news_data.json"}
-        ]
+            return json.load(f), os.path.getmtime(file_path)
+    return None, None
 
-# --- 4. INTERFAZ DE USUARIO ---
+# --- UI ---
 st.title("☘️ Pulse of the Program")
-st.subheader("Morning Intelligence Report (8:00 AM)")
-st.markdown("---")
+st.subheader("Morning Intelligence Agent")
 
-# Cargar las noticias del archivo JSON
-data = load_data()
+data, last_mod = load_data()
 
-# Botón para generar el reporte basado en los datos actuales
-if st.button("🚀 Generate Today's Intelligence"):
-    st.write(f"**Report Date:** {pd.Timestamp.now().strftime('%Y-%m-%d %H:%M')}")
-    
-    for item in data:
-        with st.container():
-            col1, col2 = st.columns([1, 4])
-            with col1:
-                st.caption(f"**[{item['source']}]**")
-            with col2:
-                st.write(f"**Trend:** {item['trend']}")
-                
-                # Ejecutar la lógica del modelo sobre la noticia real
-                nd_angle = get_nd_angle(item['trend'])
-                st.info(f"**ND Angle:** {nd_angle}")
-            st.divider()
-    
-    st.success("Report Grounded in 'Irish Breakdown' context.")
+if last_mod:
+    last_update = datetime.fromtimestamp(last_mod).strftime('%Y-%m-%d %H:%M')
+    st.caption(f"Last automated sync: {last_update}")
 
-# --- 5. SIDEBAR ---
-with st.sidebar:
-    st.header("Project Insights")
-    st.write("**Student:** Gisela Sanchez Iznajar")
-    st.write("**Data Pipeline:** Automated via GitHub Actions")
-    st.markdown("---")
-    st.write("### Tech Stack")
-    st.info("Python + Streamlit + JSON + GitHub")
+if st.button("🚀 Generate Strategic Analysis"):
+    if data:
+        for item in data:
+            with st.container():
+                st.markdown(f"### {item['source']}")
+                st.write(f"**Current Trend:** {item['trend']}")
+                # Aplicamos el modelo
+                angle = get_nd_angle(item['trend'])
+                st.info(f"**ND Angle:** {angle}")
+                st.divider()
+        st.success("Analysis complete based on latest 8:00 AM data.")
+    else:
+        st.error("Data source not found. Please run the automated scraper.")
