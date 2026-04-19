@@ -1,0 +1,33 @@
+name: Morning Intelligence Update
+
+on:
+  schedule:
+    # Se ejecuta a las 12:00 UTC (8:00 AM hora de South Bend / EST)
+    - cron: '0 12 * * *'
+  workflow_dispatch: # Permite ejecutarlo manualmente para probar
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: pip install pandas # Añade aquí lo que necesites
+
+      - name: Run Scraper
+        run: python update_news.py
+
+      - name: Commit and Push changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add news_data.json
+          git commit -m "Automated Morning Update: $(date)" || exit 0
+          git push
