@@ -1,23 +1,29 @@
 import streamlit as st
+import pandas as pd
 
-# Diccionario simulado de tendencias nacionales
-national_trends = [
-    {"topic": "Cambios en las reglas de NIL", "source": "ESPN"},
-    {"topic": "Nuevas formaciones ofensivas en la SEC", "source": "CBS Sports"}
+# 1. UI Setup
+st.title("☘️ Pulse of the Program")
+st.subheader("Morning Intelligence Report (8:00 AM)")
+
+# 2. Simulated Intelligence Logic
+def get_nd_angle(national_headline):
+    # This logic mimics the "Gem" specialized for Bryan Driskell
+    if "Recruit" in national_headline:
+        return "Action: Cross-reference with Isaiah Rogers' latest X activity."
+    elif "NIL" in national_headline:
+        return "Angle: How this impacts the current ND donor collective strategy."
+    return "Status: Monitor for potential impact on Irish Breakdown topics."
+
+# 3. Data Presentation
+news_data = [
+    {"source": "ESPN", "headline": "New NCAA Transfer Portal Windows Announced"},
+    {"source": "X", "headline": "Top-tier CB prospect posts ND visit photos"}
 ]
 
-def generate_nd_angle(topic):
-    # Aquí es donde NotebookLM y tus Gems harían la magia
-    if "NIL" in topic:
-        return "Impacto en ND: Podría acelerar las negociaciones con los reclutas de la clase 2026."
-    elif "ofensiva" in topic:
-        return "Impacto en ND: Mike Denbrock podría adaptar esto para aprovechar la movilidad de los QBs."
-    return "Tendencia bajo observación para el programa."
-
-st.header("☘️ Pulse of the Program: Morning Report")
-
-if st.button("Generar Reporte de las 8:00 AM"):
-    for trend in national_trends:
-        with st.expander(f"Noticia: {trend['topic']}"):
-            st.write(f"**Fuente:** {trend['source']}")
-            st.info(generate_nd_angle(trend['topic']))
+if st.button("Generate Today's Report"):
+    for item in news_data:
+        with st.container():
+            st.write(f"**Source:** {item['source']}")
+            st.write(f"**Trend:** {item['headline']}")
+            st.success(f"**ND Angle:** {get_nd_angle(item['headline'])}")
+            st.divider()
