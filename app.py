@@ -1,40 +1,24 @@
 import streamlit as st
+import time
 
-# Configuración de la página con estilo profesional
-st.set_page_config(page_title="AI Sales Agent", page_icon="🤖")
-
-# Título con el enfoque de tu proyecto
+# Título con estilo
 st.title("✨ AI Sales & Marketing Agent")
-st.markdown("### Powered by NotebookLM & Gemini")
+st.caption("Especializado en Estrategia Deportiva y Retail")
 
-# Simulación de la lógica de "Source Grounding" que aprendiste en NotebookLM
-def get_ai_response(user_input):
-    # Aquí es donde el chatbot "vibraría" con la lógica de tu Gem
-    if "atleta" in user_input.lower():
-        return "Según los lineamientos de ND Athletics, el mensaje debe enfocarse en la superación."
-    elif "producto" in user_input.lower():
-        return "Para maximizar ventas, el agente sugiere un Carousel de Instagram con brillos/rhinestones."
-    else:
-        return "Estoy analizando tus fuentes de NotebookLM para darte la mejor estrategia..."
-
-# Interfaz de Chat
-if "messages" not in st.session_state:
-    st.session_state.messages = []
-
-# Mostrar historial de chat
-for message in st.session_state.messages:
-    with st.chat_message(message["role"]):
-        st.markdown(message["content"])
-
-# Input del usuario
-if prompt := st.chat_input("¿Cómo puedo ayudarte con tu estrategia de ventas hoy?"):
-    st.session_state.messages.append({"role": "user", "content": prompt})
+if prompt := st.chat_input("Pregúntame sobre el mejor jugador o estrategia..."):
     with st.chat_message("user"):
         st.markdown(prompt)
 
-    # Respuesta del modelo
-    response = get_ai_response(prompt)
-    
     with st.chat_message("assistant"):
-        st.markdown(response)
-    st.session_state.messages.append({"role": "assistant", "content": response})
+        # 1. Indicador visual de que la IA está "pensando" o "leyendo"
+        with st.spinner("Consultando fuentes en NotebookLM..."):
+            # Simulamos el tiempo de proceso del RAG
+            time.sleep(2) 
+            
+            # Lógica de respuesta
+            if "jugador" in prompt.lower():
+                response = "Basado en los datos de rendimiento de la temporada, el 'mejor jugador' se define por su eficiencia en momentos críticos. Según tus fuentes, este perfil encaja con..."
+            else:
+                response = "Estoy procesando la información de tus documentos para darte una respuesta exacta."
+            
+            st.markdown(response)
