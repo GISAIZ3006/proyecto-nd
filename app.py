@@ -1,24 +1,23 @@
 import streamlit as st
-import time
 
-# Título con estilo
-st.title("✨ AI Sales & Marketing Agent")
-st.caption("Especializado en Estrategia Deportiva y Retail")
+# Diccionario simulado de tendencias nacionales
+national_trends = [
+    {"topic": "Cambios en las reglas de NIL", "source": "ESPN"},
+    {"topic": "Nuevas formaciones ofensivas en la SEC", "source": "CBS Sports"}
+]
 
-if prompt := st.chat_input("Pregúntame sobre el mejor jugador o estrategia..."):
-    with st.chat_message("user"):
-        st.markdown(prompt)
+def generate_nd_angle(topic):
+    # Aquí es donde NotebookLM y tus Gems harían la magia
+    if "NIL" in topic:
+        return "Impacto en ND: Podría acelerar las negociaciones con los reclutas de la clase 2026."
+    elif "ofensiva" in topic:
+        return "Impacto en ND: Mike Denbrock podría adaptar esto para aprovechar la movilidad de los QBs."
+    return "Tendencia bajo observación para el programa."
 
-    with st.chat_message("assistant"):
-        # 1. Indicador visual de que la IA está "pensando" o "leyendo"
-        with st.spinner("Consultando fuentes en NotebookLM..."):
-            # Simulamos el tiempo de proceso del RAG
-            time.sleep(2) 
-            
-            # Lógica de respuesta
-            if "jugador" in prompt.lower():
-                response = "Basado en los datos de rendimiento de la temporada, el 'mejor jugador' se define por su eficiencia en momentos críticos. Según tus fuentes, este perfil encaja con..."
-            else:
-                response = "Estoy procesando la información de tus documentos para darte una respuesta exacta."
-            
-            st.markdown(response)
+st.header("☘️ Pulse of the Program: Morning Report")
+
+if st.button("Generar Reporte de las 8:00 AM"):
+    for trend in national_trends:
+        with st.expander(f"Noticia: {trend['topic']}"):
+            st.write(f"**Fuente:** {trend['source']}")
+            st.info(generate_nd_angle(trend['topic']))
